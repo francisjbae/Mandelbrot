@@ -12,7 +12,7 @@ int main()
     ComplexPlane bob(width, height);
 
     Font font;
-    if (!font.loadFromFile("Arial.ttf"))
+    if (!font.loadFromFile("Vermin Vibes 1989.ttf"))
     {
         cerr << "Error loading font\n";
         return -1;
@@ -20,7 +20,7 @@ int main()
 
     Text text;
     text.setFont(font);
-    text.setCharacterSize(48);
+    text.setCharacterSize(24);
     text.setFillColor(Color::White);
     text.setPosition(10, 10);
 
@@ -35,13 +35,13 @@ int main()
             }
             if (event.type == Event::MouseButtonPressed)
             {
-                if (event.mouseButton.button == Mouse::Right)
+                if (event.mouseButton.button == Mouse::Left)
                 {
                     bob.zoomIn();
                     Vector2i pos(event.mouseButton.x, event.mouseButton.y);
                     bob.setCenter(pos);
                 }
-                else if (event.mouseButton.button == Mouse::Left)
+                else if (event.mouseButton.button == Mouse::Right)
                 {
                     bob.zoomOut();
                     Vector2i pos(event.mouseButton.x, event.mouseButton.y);
@@ -65,7 +65,7 @@ int main()
 
         window.clear();
 
-        window.draw(bob);
+        window.draw(bob, RenderStates::Default);
         window.draw(text);
         window.display();
     }

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include <sstream>
+#include <cmath>
 using namespace std;
 using namespace sf;
 
@@ -17,11 +18,11 @@ enum class State
 	DISPLAYING,
 };
 
-class ComplexPlane
+class ComplexPlane : public Drawable
 {
 public:
 	ComplexPlane(int pixelWidth, int pixelHeight);
-	void draw(RenderTarget& target, RenderStates states) const;
+	virtual void draw (RenderTarget &target, RenderStates states) const;
 	void zoomIn();
 	void zoomOut();
 	void setCenter(Vector2i mousePixel);

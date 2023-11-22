@@ -3,7 +3,7 @@
 ComplexPlane::ComplexPlane(int pixelWidth, int pixelHeight)
 {
     m_pixel_size = { pixelWidth, pixelHeight };
-    m_aspectRatio = pixelHeight / pixelWidth;
+    m_aspectRatio = 1.0 * pixelHeight / pixelWidth;
     m_plane_center = { 0,0 };
     m_plane_size = { BASE_WIDTH, BASE_HEIGHT * m_aspectRatio };
     m_zoomCount = 0;
@@ -37,8 +37,7 @@ void ComplexPlane::zoomOut()
 
 void ComplexPlane::setCenter(Vector2i mousePixel)
 {
-    Vector2f complexCoord = mapPixelToCoords(mousePixel);
-    m_plane_center = complexCoord;
+    m_plane_center = mapPixelToCoords(mousePixel);
     m_state = State::CALCULATING;
 }
 
@@ -103,47 +102,46 @@ size_t ComplexPlane::countIterations(Vector2f coord)
 void ComplexPlane::iterationsToRGB(size_t count, Uint8& r, Uint8& g, Uint8& b)
 {
     if (count == MAX_ITER) {
+        r = 255;
+        g = 255;
+        b = 255;
+    }
+    else if (count >= 52 && count < MAX_ITER)
+    {
+        r = 0;
+        g = 255;
+        b = 162;
+    }
+    else if (count >= 38 && count <  52)
+    {
+        r = 0;
+        g = 255;
+        b = 221;
+    }
+    else if(count >= 26 && count < 38)
+    {
+        r = 0;
+        g = 255;
+        b = 255;
+    }
+    else if (count >= 12 && count < 26)
+    {
+        r = 0;
+        g = 229;
+        b = 255;
+    }
+    else if(count >= 0 && count < 12)
+    {
         r = 0;
         g = 0;
         b = 0;
     }
-    else {
-        const size_t region1 = MAX_ITER / 5;
-        const size_t region2 = 2 * region1;
-        const size_t region3 = 3 * region1;
-        const size_t region4 = 4 * region1;
-
-        sf::Color color1();
-        sf::Color color2(); 
-        sf::Color color3(); 
-        sf::Color color4();
-        sf::Color color5(); 
-
-    }
 }
-
-/*Vector2f ComplexPlane::mapPixelToCoords(Vector2i mousePixel)
-{
-    float mappedX = ((mousePixel.x - 0) / static_cast<float>(m_pixel_size.x)) * m_plane_size.x + (m_plane_center.x - m_plane_size.x / 2.0);
-    float mappedY = ((mousePixel.y - m_pixel_size.y) / static_cast<float>(0 - m_pixel_size.y)) * m_plane_size.y + (m_plane_center.y - m_plane_size.y / 2.0);
-
-    return Vector2f(mappedX, mappedY);
-}*/
-
 
 Vector2f ComplexPlane::mapPixelToCoords(Vector2i mousePixel)
 {
-    Vector2f returnVector;
-    float x_mapToComplex = (((mousePixel.x - 0) / (VideoMode::getDesktopMode().width - 0)) * (m_plane_size.x) + (m_plane_center.x - m_plane_size.x / 2.0));
-    float x_mapToComplex = ((mousePixel.x - 0) / static_cast<float>(m_pixel_size.x)) * m_plane_size.x + (m_plane_center.x - m_plane_size.x / 2.0);
+    float mapX = ((mousePixel.x - 0) / static_cast<float>(m_pixel_size.x)) * m_plane_size.x + (m_plane_center.x - m_plane_size.x / 2.0);
+    float mapY = ((mousePixel.y - m_pixel_size.y) / static_cast<float>(0 - m_pixel_size.y)) * m_plane_size.y + (m_plane_center.y - m_plane_size.y / 2.0);
 
-    float y_mapToComplex = (((mousePixel.y - VideoMode::getDesktopMode().height) / (0 - VideoMode::getDesktopMode().height)) * (m_plane_size.y) + (m_plane_center.y - m_plane_size.y / 2.0));
-    float y_mapToComplex = ((mousePixel.y - m_pixel_size.y) / static_cast<float>(0 - m_pixel_size.y)) * m_plane_size.y + (m_plane_center.y - m_plane_size.y / 2.0);
-
-
-
-    returnVector.x = x_mapToComplex;
-    returnVector.y = y_mapToComplex;
-
-    return returnVector;
+    return Vector2f(mapX, mapY);
 }
